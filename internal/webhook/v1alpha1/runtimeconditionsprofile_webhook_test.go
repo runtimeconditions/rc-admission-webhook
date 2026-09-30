@@ -21,7 +21,6 @@ import (
 	"testing"
 
 	resolver "github.com/runtimeconditions/rc-extension-resolver"
-	admissionv1 "k8s.io/api/admission/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
@@ -70,9 +69,7 @@ func newTestValidator() *RuntimeConditionsProfileValidator {
 func newAdmissionRequest(t *testing.T, profileJSON string) admission.Request {
 	t.Helper()
 	return admission.Request{
-		AdmissionRequest: admissionv1.AdmissionRequest{
-			Object: runtime.RawExtension{Raw: []byte(profileJSON)},
-		},
+		Object: runtime.RawExtension{Raw: []byte(profileJSON)},
 	}
 }
 
