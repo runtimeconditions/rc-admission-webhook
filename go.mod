@@ -5,7 +5,7 @@ go 1.27.0
 require (
 	github.com/onsi/ginkgo/v2 v2.27.4
 	github.com/onsi/gomega v1.39.0
-	github.com/runtimeconditions/rc-extension-resolver v0.0.0-20260929185940-91c46bf6bcc8
+	github.com/runtimeconditions/rc-extension-resolver v0.0.0-20261111085732-90e913c3b2f2
 	github.com/runtimeconditions/runtime-conditions-crd v0.0.0-20260915085941-fc6753703f71
 	k8s.io/api v0.36.0
 	k8s.io/apimachinery v0.36.0

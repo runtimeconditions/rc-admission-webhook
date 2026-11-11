@@ -128,30 +128,14 @@ func validateCondition(catalog *resolver.Catalog, condition map[string]any) (pro
 	return "", ""
 }
 
-// resolveAll resolves every extension a profile declares and combines
-// them into one graph, deduplicated by extension identifier. A profile
-// can declare several independent extensions, not just one dependency
-// tree - each entry in extensionURIs (the profile's `extensions` field)
-// is its own root, so this fans Resolver.Resolve out across all of them
-// before a single Merge.
+// resolveAll resolves every extension a profile declares into one graph, keyed
+// by the exact reference each one was reached by. A profile can declare several
+// independent extensions, not just one dependency tree - each entry in
+// extensionURIs (the profile's `extensions` field) is its own root.
+//
+// The graph is keyed by reference rather than by metadata.id: a Condition's
+// `extension` selector must match the spelling the profile declared, and a
+// definition's metadata.id may spell it differently.
 func resolveAll(loader resolver.LoaderFunc, extensionURIs []string) (*resolver.ResolvedGraph, error) {
-	r := resolver.NewResolver(loader)
-	byID := make(map[string]*resolver.ExtensionDefinition)
-	var order []*resolver.ExtensionDefinition
-
-	for _, root := range extensionURIs {
-		graph, err := r.Resolve(root)
-		if err != nil {
-			return nil, err
-		}
-		for _, ext := range graph.Extensions {
-			if _, ok := byID[ext.Metadata.ID]; ok {
-				continue
-			}
-			byID[ext.Metadata.ID] = ext
-			order = append(order, ext)
-		}
-	}
-
-	return &resolver.ResolvedGraph{Extensions: order, ByID: byID}, nil
+	return resolver.NewResolver(loader).ResolveAll(extensionURIs...)
 }
